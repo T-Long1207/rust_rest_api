@@ -9,10 +9,9 @@ use listenfd::ListenFd;
 use std::env;
 
 mod db;
+mod employees;
 mod error_handler;
-mod phones;
 mod schema;
-
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -20,7 +19,7 @@ async fn main() -> std::io::Result<()> {
     db::init();
 
     let mut listenfd = ListenFd::from_env();
-    let mut server = HttpServer::new(|| App::new().configure(phones::init_routes));
+    let mut server = HttpServer::new(|| App::new().configure(employees::init_routes));
 
     server = match listenfd.take_tcp_listener(0)? {
         Some(listener) => server.listen(listener)?,
